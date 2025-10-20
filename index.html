@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scaleheight — Create An Account</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Reset for Box Model & Variables (Consolidated) */
+    *, *::before, *::after {
+      box-sizing: border-box; 
+    }
+
+    :root {
+      /* Consolidated & Refined Colors/Variables */
+      --accent: #1a73e8; 
+      --bg: #f0f4f8;
+      --card: #fff;
+      --muted: #6b7280;
+      --radius: 12px;
+      --gap: 20px; /* Increased general spacing */
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      /* Softer, modern gradient */
+      background: linear-gradient(135deg, var(--bg), #e0e7f1);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #0f172a;
+    }
+
+    /* Main Container (unified style) */
+    .container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    
+    h1, h2 {
+      margin: 0 0 30px 0;
+      font-size: 24px;
+      text-align: center;
+      font-weight: 700;
+      color: #111;
+    }
+    
+    /* Used for Step 1's subtitle */
+    p.lead {
+      margin: 0 0 25px 0;
+      font-size: 15px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .field {
+      margin-bottom: var(--gap);
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: #111;
+      margin-bottom: 8px;
+      font-weight: 500; 
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #0f172a;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+    }
+   
+    /* === BUTTON STYLES (FIXED) === */
+
+    .btn-primary, .btn-secondary, .btn-prev {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, opacity .2s, border-color .2s;
+      margin-bottom: 10px;
+      border: none;
+      text-decoration: none; /* Required for the anchor tag */
+    }
+    
+    .btn-primary { 
+      background: var(--accent); 
+      color: #fff; 
+    }
+    
+    .btn-primary:hover { 
+      background: #1255b7; /* Darker accent for hover */
+    }
+    
+    .btn-secondary { /* Corrected class name */
+      background: var(--card); /* White background */
+      color: var(--accent); /* Accent text */
+      border: 1px solid var(--accent); /* Outline effect */
+      margin-bottom: 20px;
+      text-align: center; /* <<< FIX FOR CENTERING THE LINK TEXT */
+    }
+
+    .btn-secondary:hover {
+      background: #f0f4f8; /* Light background on hover */
+    }
+
+    .btn-prev {
+      background: #e4e4e7;
+      color: #111;
+      margin-top: 10px;
+    }
+    
+    .btn-prev:hover {
+      background: #d4d4d7;
+    }
+
+    /* === END BUTTON STYLES === */
+            
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    /* Step 2 Specific Styles */
+    .support-text {
+      font-size: 13px;
+      text-align: center;
+      color: #666;
+      margin: 15px 0;
+    }
+    
+    .contact-support-link {
+      display: block;
+      text-align: center;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: underline;
+      margin: 10px 0 20px 0;
+    }
+    
+    .package {
+      background: #f8faff;
+      border: 2px solid #d7e3fc;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      margin: 20px 0;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s; 
+    }
+
+    .package:hover {
+      transform: scale(1.02);
+      border-color: var(--accent);
+    }
+    
+    .package h4 {
+        margin: 0 0 5px 0;
+        font-size: 18px;
+    }
+
+    .price {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 32px;
+    }
+
+    .strike {
+      text-decoration: line-through;
+      color: #888;
+      margin-left: 8px;
+      font-size: 18px;
+    }
+    
+    /* Inline error message */
+    .error {
+      color:#b91c1c;
+      font-size:13px;
+      margin-top:6px;
+    }
+
+    /* Popup Styles */
+    #popup-overlay {
+      position: fixed;
+      padding: 24px;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 0; /* Managed by JS for transition */
+      transition: opacity 0.3s ease-in-out; 
+    }
+
+    .popup {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      width: 95%;
+      max-width: 400px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    
+    .popup h3 { text-align: center; font-size: 20px; margin-bottom: 15px; font-weight: 700; color: #111; }
+    .popup p { font-size: 14px; color: #333; line-height: 1.6; margin: 10px 0; }
+    .note { border: 1px solid #ffaa00; border-radius: 8px; padding: 12px; background: #fff8e1; color: #ffaa00; font-weight: bold; text-align: center; margin: 15px 0; font-size: 14px; }
+    .payment-info { text-align: center; line-height: 1.6; }
+    .amount { margin-bottom: 20px; }
+    .amount-label { font-size: 14px; color: #666; }
+    .amount strong { font-size: 32px; color: var(--accent); display: block; margin-top: 5px; }
+    .bankinfo p { margin: 5px 0; font-size: 16px; font-weight: 500; color: #111; }
+    .bankinfo strong { display: block; font-size: 13px; font-weight: 400; color: #444; margin-bottom: 2px; }
+    .copy-btn { color: var(--accent); cursor: pointer; font-weight: 600; margin-left: 6px; transition: color 0.2s; }
+    .copy-btn:hover { color: #004bd1; }
+    .btn-support { display: block; width: 100%; text-align: center; padding: 12px; background: #00c851; color: #fff; font-weight: bold; border-radius: 8px; text-decoration: none; margin-top: 20px; font-size: 16px; transition: background 0.2s; }
+    .btn-support:hover { background: #00a041; }
+    .close-btn { position: absolute; top: 12px; right: 18px; font-size: 24px; font-weight: 300; cursor: pointer; color: #888; line-height: 1; }
+    .close-btn:hover { color: #555; }
+    .help { font-size: 13px; text-align: center; margin-top: 20px; }
+    .help a { font-weight: 700; text-decoration: none; color: var(--accent); }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div id="signupStep1">
+      <h1>Create An Account</h1>
+      <p class="lead">Enter your details to get started with Scaleheight</p>
+
+      <form id="step1Form" novalidate>
+        <div class="field">
+          <label for="firstName">Enter First Name</label>
+          <input id="firstName" name="firstName" type="text" placeholder="First Name" required />
+          <div id="errFirst" class="error" style="display:none"></div>
+        </div>
+
+        <div class="field">
+          <label for="lastName">Enter Last Name</label>
+          <input id="lastName" name="lastName" type="text" placeholder="Last Name" required />
+          <div id="errLast" class="error" style="display:none"></div>
+        </div>
+
+        <div class="field">
+          <label for="phone">Enter Phone Number</label>
+          <input id="phone" name="phone" type="tel" placeholder="e.g. +2348012345678" inputmode="tel" required />
+          <div id="errPhone" class="error" style="display:none"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">Enter Email Address</label>
+          <input id="email" name="email" type="email" placeholder="name@example.com" required />
+          <div id="errEmail" class="error" style="display:none"></div>
+        </div>
+                
+        <button type="button" id="continueBtn" class="btn-primary">Continue</button>
+        
+        <a 
+          href="https://sites.google.com/view/scaleheight/login" 
+          id="loginLink" 
+          class="btn-secondary"
+          role="button"
+        >
+          Click here to login
+        </a>
+        
+        <p class="small">By continuing you agree to join Scaleheight. We will keep your data safe.</p>
+      </form>        
+    </div>
+
+    <div id="signupStep2" style="display: none;">
+      <h2>Create An Account</h2>
+      
+      <div class="field">
+        <label for="password">Enter Password</label>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <div id="errPassword" class="error" style="display:none"></div>
+      </div>
+      
+      <div class="field">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        <div id="errConfirmPassword" class="error" style="display:none"></div>
+      </div>
+      
+      <div class="field">
+        <label for="coupon">Enter Coupon Code</label>
+        <input type="text" id="coupon" placeholder="Enter Coupon Code">
+      </div>
+
+      <p style="font-size:14px; color:#666; margin-bottom: 20px;">
+        To Get Coupon Code, Select one of the Registration Packages Below.
+      </p>
+
+      <div class="package" id="packageCard">
+        <h4>Standard Package</h4>
+        <span class="price">₦12,000</span>
+        <span class="strike">₦16,000</span>
+      </div>
+
+      <div class="support-text">
+        If You Need more Explanation or have Any Issue with Making Payment, please contact our Support Team.
+      </div>
+
+      <a href="https://wa.link/m2g76j" target="_blank" class="contact-support-link">
+        Contact Support Team
+      </a>
+
+      <button class="btn-prev" id="backBtn">Previous</button>
+      <button class="btn-primary" id="submitBtn">Submit</button>
+    </div>
+
+  </div> 
+
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="popup">
+      <span class="close-btn" id="closePopupBtn">&times;</span>
+      <h3>Payment Gateway</h3>
+
+      <p><strong>Pay with Bank Transfer</strong><br>
+      Please complete payment to the account below.</p>
+
+      <div class="note">
+        Note: DO NOT PAY WITH OPAY. It is not accepted on Scaleheight. Use any other bank or POS to pay.
+      </div>
+
+      <p style="font-size:13px; color:#444;">After making payment, please contact support with your payment receipt.</p>
+
+      <div class="payment-info">
+
+        <div class="amount" style="margin-bottom:20px;">
+          <span class="amount-label">Amount to Pay:</span>
+          <strong style="font-size:32px;">₦12,000</strong>
+          <span class="copy-btn" onclick="copyText('12000')">Copy 📋</span>
+        </div>
+
+        <div class="bankinfo">
+          
+          <strong>Account Number:</strong>
+          <p>9859505879 
+            <span class="copy-btn" onclick="copyText('9859505879')">📋</span>
+          </p>
+
+          <strong>Bank Name:</strong>
+          <p>Paystack Titan 
+            <span class="copy-btn" onclick="copyText('Paystack Titan')">📋</span>
+          </p>
+
+          <strong>Account Name:</strong>
+          <p>Tirimisiyu Usman 
+            <span class="copy-btn" onclick="copyText('Tirimisiyu Usman')">📋</span>
+          </p>
+        </div>
+      </div>
+      
+      <a href="https://wa.link/m2g76j" target="_blank" class="btn-support">I have made this transfer / Contact Support</a>
+
+      <p class="help">Need help? <a href="https://wa.link/m2g76j" target="_blank">Contact SCALE HEIGHT Support</a></p>
+    </div>
+  </div>
+
+  <script>
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = msg;
+}
+
+const submitBtn = document.getElementById('submitBtn');
+const password = document.getElementById('password');
+const confirmPassword = document.getElementById('confirmPassword');
+const coupon = document.getElementById('coupon');
+
+submitBtn.addEventListener('click', () => {
+  showErr('errPassword', '');
+  showErr('errConfirmPassword', '');
+
+  const vPassword = password.value.trim();
+  const vConfirmPassword = confirmPassword.value.trim();
+  const vCoupon = coupon.value.trim();
+  let ok = true;
+
+  if (vPassword.length < 6) {
+    showErr('errPassword', 'Password must be at least 6 characters.');
+    ok = false;
+  }
+
+  if (vPassword !== vConfirmPassword) {
+    showErr('errConfirmPassword', 'Passwords do not match.');
+    ok = false;
+  }
+
+  if (!vCoupon) {
+    alert("Please enter your coupon code.");
+    ok = false;
+  }
+
+  if (!ok) return;
+
+  const apiUrl = "https://script.google.com/macros/s/AKfycbxi9ltCLWZuo7468Pq-MqU0cgmQ3OAN_8tPgEfSfP6lvkIluTArJ6omg2Pasc5kPc02Yw/exec" + encodeURIComponent(vCoupon);
+
+  submitBtn.innerText = "Checking...";
+  submitBtn.disabled = true;
+
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      if (data.valid) {
+        alert("Coupon verified successfully!");
+        window.location.href = "https://sites.google.com/view/scaleheight/dashboard";
+      } else {
+        alert("Invalid or expired coupon code.");
+      }
+    })
+    .catch(err => {
+      alert("Network error. Please try again.");
+      console.error(err);
+    })
+    .finally(() => {
+      submitBtn.innerText = "Submit";
+      submitBtn.disabled = false;
+    });
+});
+</script>
+</body>
+</html>
