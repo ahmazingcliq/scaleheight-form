@@ -71,19 +71,18 @@
 
         <!-- ===== PAGE 1: ACCOUNT CREATION ===== -->
         <div id="page-signup" class="card">
-            <!-- HEADER COLOR CHANGED TO text-scale-blue -->
             <h2 class="text-3xl font-extrabold text-scale-blue mb-6 text-center">Create An Account</h2>
             <form id="signup-form">
                 <div class="space-y-4">
                     <!-- First Name -->
                     <div class="input-group">
                         <label for="firstName">Enter First Name</label>
-                        <input type="text" id="firstName" placeholder="First Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
+                        <input type="text" id="firstName" placeholder="First Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
                     </div>
                     <!-- Last Name -->
                     <div class="input-group">
                         <label for="lastName">Enter Last Name</label>
-                        <input type="text" id="lastName" placeholder="Last Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
+                        <input type="text" id="lastName" placeholder="Last Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
                     </div>
                     <!-- Phone Number -->
                     <div class="input-group">
@@ -93,13 +92,13 @@
                     <!-- Email Address -->
                     <div class="input-group">
                         <label for="email">Enter Email Address</label>
-                        <input type="email" id="email" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
+                        <input type="email" id="email" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
                     </div>
                     <!-- Password -->
                     <div class="input-group">
                         <label for="password">Enter Password</label>
                         <div class="relative">
-                            <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
+                            <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
                             <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500">
                                 <span id="password-toggle-icon">👁️</span>
                             </button>
@@ -109,13 +108,22 @@
                     <div class="input-group">
                         <label for="confirmPassword">Enter Password again</label>
                         <div class="relative">
-                            <input type="password" id="confirmPassword" placeholder="Enter Password again" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
+                            <input type="password" id="confirmPassword" placeholder="Enter Password again" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
                             <button type="button" onclick="togglePassword('confirmPassword')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500">
                                 <span id="confirmPassword-toggle-icon">👁️</span>
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- NEW GEMINI FEATURE: Password Strength Analyzer -->
+                <button type="button" onclick="generateAndDisplayPasswordStrength()" class="w-full text-sm bg-blue-100 text-scale-blue py-2 rounded-lg font-medium hover:bg-blue-200 transition duration-150 flex items-center justify-center space-x-2 mt-4">
+                    <span>🔒 Check Password Strength ✨</span>
+                </button>
+                <div id="password-analysis" class="mt-2 mb-4">
+                    <!-- LLM generated password analysis text goes here -->
+                </div>
+                <!-- End Gemini Feature -->
 
                 <!-- Error Message -->
                 <p id="signup-error" class="text-scale-red text-sm mt-3 hidden"></p>
@@ -130,13 +138,24 @@
             </div>
         </div>
 
-        <!-- ===== PAGE 2: EMAIL VERIFICATION ===== -->
+        <!-- ===== PAGE 2: EMAIL VERIFICATION (UPDATED FOR CODE ENTRY) ===== -->
         <div id="page-email-verification" class="card hidden text-center">
-            <!-- HEADER COLOR CHANGED TO text-scale-blue -->
-            <h2 class="text-3xl font-extrabold text-scale-blue mb-4">EMAIL VERIFICATION</h2>
-            <p class="text-gray-600 mb-8">
-                A verification link has been sent to your email address. Please check your inbox (and spam folder) to complete your registration.
+            <h2 class="text-3xl font-extrabold text-scale-green mb-4">VERIFY EMAIL</h2>
+            <p class="text-gray-600 mb-6" id="verification-message">
+                A 6-digit verification code has been sent to the email address you provided. Please check your inbox (and spam folder) and enter the code below to proceed.
             </p>
+            <p class="text-sm font-bold text-gray-700 mb-6" id="mock-code-info">
+                <!-- Mock code for testing will be injected here. -->
+            </p>
+
+            <!-- New Code Input -->
+            <div class="input-group mb-4">
+                <label for="verificationCode">Enter 6-Digit Verification Code</label>
+                <input type="text" id="verificationCode" placeholder="E.g., 123456" maxlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-center font-bold text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-scale-green">
+            </div>
+            
+            <!-- Verification Error Message -->
+            <p id="verification-error" class="text-scale-red text-sm mt-1 mb-4 hidden"></p>
 
             <div class="space-y-4 mb-8">
                  <!-- Contact Support Block -->
@@ -149,13 +168,13 @@
 
             <div class="flex justify-between space-x-4">
                 <button onclick="showPage('page-signup')" class="w-1/2 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition duration-150">Previous</button>
-                <button onclick="showPage('page-coupon-entry')" class="w-1/2 bg-scale-blue text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-150">Submit</button>
+                <!-- This button now validates the code -->
+                <button onclick="validateVerificationCode()" class="w-1/2 bg-scale-green text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-150">Verify & Continue</button>
             </div>
         </div>
 
         <!-- ===== PAGE 3: COUPON/PACKAGE SELECTION (Welcome) ===== -->
         <div id="page-coupon-entry" class="card hidden text-center">
-            <!-- HEADER COLOR CHANGED TO text-scale-blue -->
             <h2 class="text-3xl font-extrabold text-scale-blue mb-4">WELCOME TO SCALE HEIGHT</h2>
             <p class="text-gray-600 mb-6">
                 You need a coupon code to register on Scaleheight.
@@ -206,7 +225,6 @@
 
         <!-- ===== PAGE 5: LOGIN PAGE (Simplified) ===== -->
         <div id="page-login" class="card hidden">
-            <!-- HEADER COLOR CHANGED TO text-scale-blue -->
             <h2 class="text-3xl font-extrabold text-scale-blue mb-6 text-center">Login to Account</h2>
             <form>
                 <div class="space-y-4">
@@ -229,7 +247,6 @@
 
         <!-- ===== PAGE 5/Alternate: FORGOT PASSWORD PAGE (Simplified) ===== -->
         <div id="page-forgot-password" class="card hidden">
-            <!-- HEADER COLOR CHANGED TO text-scale-blue -->
             <h2 class="text-3xl font-extrabold text-scale-blue mb-6 text-center">Forgot Password</h2>
             <p class="text-gray-600 mb-6 text-center">Enter your email address to receive a password reset link.</p>
             <form>
@@ -248,7 +265,6 @@
     <div id="receipt-modal" class="receipt-modal hidden opacity-0 flex flex-col items-center justify-start p-6">
         <div class="w-full max-w-lg mx-auto">
             <div class="flex justify-center items-center py-4 mb-4 border-b border-gray-200">
-                <!-- HEADER COLOR CHANGED TO text-scale-blue -->
                 <h2 class="text-2xl font-bold text-scale-blue">SCALEHEIGHT Payment Gateway</h2>
             </div>
 
@@ -333,78 +349,38 @@
     <!-- ===== JAVASCRIPT LOGIC (Must be at the end of body) ===== -->
     <script type="module">
         // ====================================================================
-        // FIREBASE SETUP (Mandatory Boilerplate for Canvas environment)
-        // ====================================================================
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Global variables provided by the Canvas environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth;
-
-        async function initializeFirebase() {
-            try {
-                if (Object.keys(firebaseConfig).length === 0) {
-                    console.error("Firebase config is missing. Cannot initialize Firestore/Auth.");
-                    return;
-                }
-
-                setLogLevel('debug');
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Authenticate using custom token or anonymously
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                    console.log("Firebase signed in with custom token.");
-                } else {
-                    await signInAnonymously(auth);
-                    console.log("Firebase signed in anonymously.");
-                }
-
-            } catch (error) {
-                console.error("Firebase Initialization Error:", error);
-            }
-        }
-
-        initializeFirebase();
-
-        // ====================================================================
-        // CONSTANTS (NEW)
+        // CONSTANTS & STATE
         // ====================================================================
         const VALID_COUPON_CODE = "SCALE2025"; // Mock valid coupon code for validation
         const DASHBOARD_URL = "https://sites.google.com/view/scaleheight/dashboard";
 
-
-        // ====================================================================
-        // GEMINI API INTEGRATION
-        // ====================================================================
         const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
         const API_KEY = ""; // Managed by canvas environment
 
-        // System prompt to define the model's persona and output style
-        const packageSystemPrompt = `You are a highly persuasive, concise marketing copywriter for a growth platform called ScaleHeight. Your goal is to write a single, short, and highly motivating paragraph (max 3 sentences) that justifies the immediate purchase of the 'Standard Package' priced at ₦12,000 (discounted from ₦16,000). Focus on immediate value, return on investment (ROI), and the urgency of the discount. Do not use any markdown formatting (like bolding, lists, or headers).`;
+        // REAL APP SCRIPT ENDPOINT - UPDATED WITH USER'S LINK
+        const REAL_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzH1BDq8EhfMoZAekwirnbsF2CPo88CUH3dA2F8vclgWxXwWvG1J1fiNfcSjgRhTxe3/exec';
+        
+        let MOCK_VERIFICATION_TOKEN = null; // Stored here temporarily for client-side validation
+        let MOCK_REGISTERED_EMAIL = null;
+        let IS_PROCESSING = false; // Prevent double clicks on signup
+
+        // ====================================================================
+        // GEMINI API INTEGRATION - COMMON FUNCTIONS
+        // ====================================================================
 
         /**
-         * Calls the Gemini API to generate persuasive marketing copy (Value Pitch).
-         * Implements exponential backoff for rate limiting.
+         * Generic function to call Gemini API with exponential backoff.
+         * @param {string} userQuery - The main query text.
+         * @param {string} systemPrompt - Instruction for the LLM's persona/role.
          * @returns {Promise<string>} The generated text or a fallback message.
          */
-        async function generateMarketingPitch() {
-            const userQuery = "Generate the compelling pitch for the ScaleHeight Standard Package (₦12,000, save ₦4,000).";
-            const maxRetries = 5;
+        async function callGeminiApi(userQuery, systemPrompt) {
+            const maxRetries = 3;
             let delay = 1000;
-
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: packageSystemPrompt }] },
+                systemInstruction: { parts: [{ text: systemPrompt }] },
             };
-
             const apiUrl = `${API_URL}${API_KEY}`;
 
             for (let i = 0; i < maxRetries; i++) {
@@ -427,18 +403,20 @@
                     }
 
                     const result = await response.json();
-                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Failed to generate pitch.";
-                    return text;
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "Failed to generate response.";
 
                 } catch (error) {
                     console.error("Gemini API Error:", error);
-                    // Fallback message after all retries fail
-                    return "Unlock instant access and maximize your savings today! The discounted Standard Package offers immediate value, securing your path to success on ScaleHeight for a fraction of the original cost.";
+                    break;
                 }
             }
-            // Final fallback after exhausting all retries
-            return "Unlock instant access and maximize your savings today! The discounted Standard Package offers immediate value, securing your path to success on ScaleHeight for a fraction of the original cost.";
+            return "Unable to provide analysis at this time. Please try again later.";
         }
+
+        // ====================================================================
+        // GEMINI FEATURE 1: PACKAGE PITCH GENERATOR
+        // ====================================================================
+        const packageSystemPrompt = `You are a highly persuasive, concise marketing copywriter for a growth platform called ScaleHeight. Your goal is to write a single, short, and highly motivating paragraph (max 3 sentences) that justifies the immediate purchase of the 'Standard Package' priced at ₦12,000 (discounted from ₦16,000). Focus on immediate value, return on investment (ROI), and the urgency of the discount. Do not use any markdown formatting (like bolding, lists, or headers).`;
 
         /**
          * Handler for the pitch generation button.
@@ -451,12 +429,124 @@
             pitchButton.disabled = true;
             pitchButton.classList.add('opacity-50', 'cursor-not-allowed');
 
-            const pitch = await generateMarketingPitch();
+            const userQuery = "Generate the compelling pitch for the ScaleHeight Standard Package (₦12,000, save ₦4,000).";
+            const pitch = await callGeminiApi(userQuery, packageSystemPrompt);
+
             pitchContainer.innerHTML = `<p class="italic text-gray-700 mt-2 p-3 bg-blue-50 border border-scale-blue rounded-lg">${pitch}</p>`;
 
             pitchButton.disabled = false;
             pitchButton.classList.remove('opacity-50', 'cursor-not-allowed');
         }
+
+        // ====================================================================
+        // GEMINI FEATURE 2: PASSWORD STRENGTH ANALYZER
+        // ====================================================================
+        const passwordSystemPrompt = `You are a security expert. Your task is to analyze a user's password and provide a concise, single-paragraph analysis. The analysis must contain three distinct parts: 1) A clear, short assessment (e.g., Weak, Moderate, Strong). 2) A brief reason why. 3) A specific, actionable tip for improvement. Present the information clearly without using markdown headings or lists.`;
+
+        /**
+         * Calls the Gemini API to analyze password strength.
+         */
+        window.generateAndDisplayPasswordStrength = async () => {
+            const password = document.getElementById('password').value;
+            const analysisContainer = document.getElementById('password-analysis');
+
+            if (password.length < 6) {
+                analysisContainer.innerHTML = '<p class="text-scale-red text-sm mt-1">Password must be at least 6 characters long to analyze.</p>';
+                return;
+            }
+
+            analysisContainer.innerHTML = '<p class="text-scale-blue text-sm mt-1">Analyzing password strength...</p>';
+
+            const userQuery = `Analyze the security strength of this password: ${password}`;
+            const analysisText = await callGeminiApi(userQuery, passwordSystemPrompt);
+
+            // Simple colored box based on keyword check
+            let bgColor = 'bg-red-100 border-scale-red';
+            let textColor = 'text-scale-red';
+
+            if (analysisText.toLowerCase().includes('strong')) {
+                bgColor = 'bg-green-100 border-scale-green';
+                textColor = 'text-scale-green';
+            } else if (analysisText.toLowerCase().includes('moderate')) {
+                bgColor = 'bg-yellow-100 border-yellow-600';
+                textColor = 'text-yellow-700';
+            }
+
+            analysisContainer.innerHTML = `<div class="p-3 ${bgColor} border rounded-lg"><p class="text-sm ${textColor}">${analysisText}</p></div>`;
+        }
+
+        // ====================================================================
+        // REAL APP SCRIPT INTERFACE
+        // ====================================================================
+
+        /**
+         * Sends user data to the REAL Google App Script endpoint for email verification.
+         */
+        async function sendVerificationEmailReal(data) {
+            if (IS_PROCESSING) return { success: false, message: "Registration already in progress." };
+
+            IS_PROCESSING = true;
+            
+            try {
+                const response = await fetch(REAL_APP_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors', 
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8', // Ensure correct content type
+                    },
+                    // App Script expects the data inside the 'contents' property of the POST body
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.result === 'success') {
+                    // Store the email and the code returned from App Script (for local validation demo)
+                    MOCK_REGISTERED_EMAIL = data.email;
+                    MOCK_VERIFICATION_TOKEN = result.verificationCode; 
+                    
+                    return { success: true, message: "Verification email sent successfully." };
+                } else {
+                    return { success: false, message: result.message || "Server error: Could not send email." };
+                }
+
+            } catch (error) {
+                console.error("Fetch failed (Check your App Script deployment and permissions):", error);
+                return { success: false, message: "Network error. Check console and App Script status." };
+            } finally {
+                IS_PROCESSING = false;
+            }
+        }
+
+
+        // ====================================================================
+        // VERIFICATION CODE VALIDATION
+        // ====================================================================
+        /**
+         * Validates the 6-digit code entered by the user against the mock token.
+         */
+        window.validateVerificationCode = () => {
+            const codeInput = document.getElementById('verificationCode');
+            const errorContainer = document.getElementById('verification-error');
+            errorContainer.classList.add('hidden');
+            errorContainer.textContent = '';
+            
+            const enteredCode = codeInput.value.trim();
+
+            if (enteredCode === MOCK_VERIFICATION_TOKEN && MOCK_VERIFICATION_TOKEN !== null) {
+                // Successful verification
+                console.log("Code successfully verified. Moving to coupon page.");
+                showPage('page-coupon-entry');
+                // Clear state after successful verification
+                MOCK_VERIFICATION_TOKEN = null;
+                MOCK_REGISTERED_EMAIL = null;
+            } else {
+                // Failed verification
+                errorContainer.textContent = 'Invalid or expired verification code. Please check your email and try re-registering.';
+                errorContainer.classList.remove('hidden');
+            }
+        }
+
 
         // ====================================================================
         // COUPON VALIDATION AND REDIRECT FUNCTION
@@ -467,17 +557,14 @@
         window.validateCouponAndRedirect = () => {
             const couponInput = document.getElementById('couponCode');
             const couponError = document.getElementById('coupon-error');
-            // Normalize input to uppercase and trim spaces for validation
             const enteredCode = couponInput.value.trim().toUpperCase();
 
             couponError.classList.add('hidden'); // Reset error message
 
             if (enteredCode === VALID_COUPON_CODE) {
-                // Success: Redirect to the dashboard
                 console.log("Coupon validated. Redirecting to dashboard...");
                 window.location.href = DASHBOARD_URL;
             } else {
-                // Failure: Show error message
                 couponError.textContent = "Invalid coupon code. Please check and try again.";
                 couponError.classList.remove('hidden');
                 console.warn("Invalid coupon code entered:", enteredCode);
@@ -491,6 +578,8 @@
         const receiptModal = document.getElementById('receipt-modal');
         const signupForm = document.getElementById('signup-form');
         const signupError = document.getElementById('signup-error');
+        const mockCodeInfo = document.getElementById('mock-code-info');
+
 
         /**
          * Simulates client-side routing to show one page and hide others.
@@ -507,11 +596,18 @@
             if (targetPage) {
                 targetPage.classList.remove('hidden');
             }
+            if (pageId === 'page-email-verification') {
+                 // Update the mock code display for the user
+                 if (MOCK_VERIFICATION_TOKEN) {
+                    mockCodeInfo.innerHTML = `<span class="text-scale-red font-extrabold">DEMO CODE: ${MOCK_VERIFICATION_TOKEN}</span> (Check your email for the real code!)`;
+                 }
+            } else {
+                 mockCodeInfo.textContent = '';
+            }
         }
 
         /**
          * Toggles the visibility of a password field and its icon.
-         * @param {string} inputId - The ID of the password input field.
          */
         window.togglePassword = (inputId) => {
             const input = document.getElementById(inputId);
@@ -526,29 +622,7 @@
         }
 
         /**
-         * Mocks the secure API call for validation/coupon generation.
-         */
-        const mockApiCall = async (data) => {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    // Simple validation logic
-                    if (data.password !== data.confirmPassword) {
-                        resolve({ success: false, message: "Passwords do not match." });
-                    } else if (!data.email || !data.password || !data.firstName) {
-                         resolve({ success: false, message: "Please fill in all required fields." });
-                    } else if (data.email.includes('testfail')) {
-                        // Example of a mock failure
-                        resolve({ success: false, message: "This email is already registered." });
-                    } else {
-                        // Mock Success: Email valid, user created, proceeding to verification
-                        resolve({ success: true, message: "Account created successfully. Proceeding to email verification." });
-                    }
-                }, 1000); // Simulate network delay
-            });
-        }
-
-        /**
-         * Handles form submission for signup.
+         * Handles form submission for signup, triggering the real email verification service.
          */
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -562,13 +636,25 @@
             };
 
             signupError.classList.add('hidden');
+            
+            // Basic validation
+            if (data.password !== data.confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+                signupError.classList.remove('hidden');
+                return;
+            }
+
+            // Disable button during processing
+            const submitButton = e.submitter;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending Email...';
+            submitButton.classList.add('opacity-50');
 
             try {
-                // Mock API call
-                const result = await mockApiCall(data);
+                // Call the REAL App Script service
+                const result = await sendVerificationEmailReal(data);
 
                 if (result.success) {
-                    console.log(result.message);
                     showPage('page-email-verification');
                 } else {
                     signupError.textContent = result.message;
@@ -576,15 +662,19 @@
                 }
             } catch (error) {
                 console.error("Signup failed:", error);
-                signupError.textContent = "An unexpected error occurred. Please try again.";
+                signupError.textContent = "An unexpected network error occurred. Please try again.";
                 signupError.classList.remove('hidden');
+            } finally {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Continue';
+                submitButton.classList.remove('opacity-50');
             }
         });
 
 
         /**
          * Toggles the visibility of the full-screen receipt modal.
-         * @param {boolean} show - True to show, false to hide.
          */
         window.toggleReceiptModal = (show) => {
             if (show) {
@@ -609,7 +699,6 @@
 
         /**
          * Copies text to the clipboard and provides simple feedback.
-         * @param {string} text - The text content to copy.
          */
         window.copyToClipboard = (text) => {
             const textarea = document.createElement('textarea');
