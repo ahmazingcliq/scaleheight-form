@@ -3,735 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScaleHeight Registration</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="firebaseauth.js"></script>
-    <style>
-        /* Custom Styles for aesthetics and responsiveness */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
-        .app-container {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .card {
-            background-color: white;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            border-radius: 1rem;
-            width: 100%;
-            max-width: 450px;
-            margin: 1rem;
-            padding: 2rem;
-        }
-        .input-group label {
-            font-weight: 500;
-            color: #4a5568;
-            margin-bottom: 0.25rem;
-            display: block;
-        }
-        /* Custom scrollbar for better look */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-thumb { background-color: #9ca3af; border-radius: 10px; }
-        ::-webkit-scrollbar-track { background-color: #f3f4f6; }
-
-        /* Full-screen Receipt Modal Styling */
-        .receipt-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            z-index: 50;
-            overflow-y: auto;
-            transition: opacity 0.3s ease-in-out;
-        }
-    </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'scale-green': '#10b981', /* Emerald 500 */
-                        'scale-red': '#ef4444',   /* Red 500 */
-                        'scale-blue': '#3b82f6', /* Blue 500 */
-                    },
-                }
-            }
-        }
-    </script>
+    <title>Scale Height Registration</title>
+   <link rel="stylesheet" href="style.css"> ">
 </head>
-<body class="bg-gray-100">
+<body>
 
-    <div id="app-container" class="app-container">
+    <div class="app-container">
+        <!-- Message Box Placeholder -->
+        <div id="message-box" class="message-box hidden">
+            <div id="message-text" class="message-text"></div>
+            <button class="message-btn" onclick="hideMessageBox()">OK</button>
+        </div>
 
-        <!-- ===== PAGE 1: ACCOUNT CREATION ===== -->
-        <div id="page-signup" class="card">
-            <h2 class="text-3xl font-extrabold text-scale-blue mb-6 text-center">Create An Account</h2>
-            <form id="signup-form">
-                <div class="space-y-4">
-                    <!-- First Name -->
-                    <div class="input-group">
+        <!-- View 1: Create Account Form -->
+        <div id="view-create-account">
+            <div class="header">Create An Account</div>
+            <div class="view-content">
+                <form id="create-account-form">
+                    <div class="form-group">
                         <label for="firstName">Enter First Name</label>
-                        <input type="text" id="firstName" placeholder="First Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
+                        <div class="input-wrapper">
+                            <input type="text" id="firstName" placeholder="First Name" required>
+                        </div>
                     </div>
-                    <!-- Last Name -->
-                    <div class="input-group">
+                    <div class="form-group">
                         <label for="lastName">Enter Last Name</label>
-                        <input type="text" id="lastName" placeholder="Last Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
+                        <div class="input-wrapper">
+                            <input type="text" id="lastName" placeholder="Last Name" required>
+                        </div>
                     </div>
-                    <!-- Phone Number -->
-                    <div class="input-group">
-                        <label for="phone">Enter Phone Number</label>
-                        <input type="tel" id="phone" placeholder="Phone Number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
+                    <div class="form-group">
+                        <label for="phoneNumber">Enter Phone Number</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+                        </div>
                     </div>
-                    <!-- Email Address -->
-                    <div class="input-group">
+                    <div class="form-group">
                         <label for="email">Enter Email Address</label>
-                        <input type="email" id="email" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" placeholder="Email Address" required>
+                        </div>
                     </div>
-                    <!-- Password -->
-                    <div class="input-group">
+                    <div class="form-group">
                         <label for="password">Enter Password</label>
-                        <div class="relative">
-                            <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
-                            <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500">
-                                <span id="password-toggle-icon">👁️</span>
-                            </button>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" required>
+                            <span class="password-toggle" onclick="togglePasswordVisibility('password')"><i class="fas fa-eye"></i></span>
                         </div>
                     </div>
-                    <!-- Confirm Password -->
-                    <div class="input-group">
-                        <label for="confirmPassword">Enter Password again</label>
-                        <div class="relative">
-                            <input type="password" id="confirmPassword" placeholder="Enter Password again" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue" required>
-                            <button type="button" onclick="togglePassword('confirmPassword')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500">
-                                <span id="confirmPassword-toggle-icon">👁️</span>
-                            </button>
+                    <div class="form-group">
+                        <label for="passwordConfirm">Enter Password again</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="passwordConfirm" required>
+                            <span class="password-toggle" onclick="togglePasswordVisibility('passwordConfirm')"><i class="fas fa-eye"></i></span>
                         </div>
                     </div>
-                </div>
-
-                <!-- NEW GEMINI FEATURE: Password Strength Analyzer -->
-                <button type="button" onclick="generateAndDisplayPasswordStrength()" class="w-full text-sm bg-blue-100 text-scale-blue py-2 rounded-lg font-medium hover:bg-blue-200 transition duration-150 flex items-center justify-center space-x-2 mt-4">
-                    <span>🔒 Check Password Strength ✨</span>
-                </button>
-                <div id="password-analysis" class="mt-2 mb-4">
-                    <!-- LLM generated password analysis text goes here -->
-                </div>
-                <!-- End Gemini Feature -->
-
-                <!-- Error Message -->
-                <p id="signup-error" class="text-scale-red text-sm mt-3 hidden"></p>
-
-                <!-- Actions -->
-                <button type="submit" class="w-full bg-scale-blue text-white py-3 mt-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-150">Continue</button>
-            </form>
-
-            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
-                <button onclick="showPage('page-login')" class="text-sm text-scale-blue hover:text-blue-700 font-medium">Login</button>
-                <button onclick="showPage('page-forgot-password')" class="text-sm text-gray-500 hover:text-scale-blue">Forgot Password?</button>
-            </div>
-        </div>
-
-        <!-- ===== PAGE 2: EMAIL VERIFICATION (UPDATED FOR CODE ENTRY) ===== -->
-        <div id="page-email-verification" class="card hidden text-center">
-            <h2 class="text-3xl font-extrabold text-scale-green mb-4">VERIFY EMAIL</h2>
-            <p class="text-gray-600 mb-6" id="verification-message">
-                A 6-digit verification code has been sent to the email address you provided. Please check your inbox (and spam folder) and enter the code below to proceed.
-            </p>
-            <p class="text-sm font-bold text-gray-700 mb-6" id="mock-code-info">
-                <!-- Mock code for testing will be injected here. -->
-            </p>
-
-            <!-- New Code Input -->
-            <div class="input-group mb-4">
-                <label for="verificationCode">Enter 6-Digit Verification Code</label>
-                <input type="text" id="verificationCode" placeholder="E.g., 123456" maxlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-center font-bold text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-scale-green">
-            </div>
-            
-            <!-- Verification Error Message -->
-            <p id="verification-error" class="text-scale-red text-sm mt-1 mb-4 hidden"></p>
-
-            <div class="space-y-4 mb-8">
-                 <!-- Contact Support Block -->
-                <p class="text-gray-500 text-sm">
-                    If You Need more Explanation on Scaleheight, or You have Any Issue with Making Payment, <a href="https://wa.link/m2g76j" target="_blank" class="text-scale-blue hover:underline font-semibold">Click here to Contact our Support Team.</a>
-                </p>
-                <!-- Separator -->
-                <hr class="border-gray-200">
-            </div>
-
-            <div class="flex justify-between space-x-4">
-                <button onclick="showPage('page-signup')" class="w-1/2 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition duration-150">Previous</button>
-                <!-- This button now validates the code -->
-                <button onclick="validateVerificationCode()" class="w-1/2 bg-scale-green text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-150">Verify & Continue</button>
-            </div>
-        </div>
-
-        <!-- ===== PAGE 3: COUPON/PACKAGE SELECTION (Welcome) ===== -->
-        <div id="page-coupon-entry" class="card hidden text-center">
-            <h2 class="text-3xl font-extrabold text-scale-blue mb-4">WELCOME TO SCALE HEIGHT</h2>
-            <p class="text-gray-600 mb-6">
-                You need a coupon code to register on Scaleheight.
-            </p>
-
-            <div class="input-group mb-4">
-                <input type="text" id="couponCode" placeholder="Enter Coupon Code" class="w-full px-4 py-3 border-2 border-dashed border-scale-blue rounded-lg text-center font-bold text-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
-            </div>
-            
-            <!-- Coupon Validation Error Message -->
-            <p id="coupon-error" class="text-scale-red text-sm mt-1 mb-4 hidden">Invalid coupon code. Please check and try again.</p>
-
-            <!-- Submit Button (New Feature) -->
-            <button onclick="validateCouponAndRedirect()" class="w-full bg-scale-green text-white py-3 rounded-lg font-semibold hover:bg-emerald-600 transition duration-150">Submit Coupon Code</button>
-
-            <!-- Existing Gemini Feature: Package Pitch Generator -->
-            <button id="generate-pitch-btn" onclick="generateAndDisplayPitch()" class="w-full text-sm bg-gray-200 text-gray-800 py-2 rounded-lg font-medium hover:bg-gray-300 transition duration-150 flex items-center justify-center space-x-2 mt-4">
-                <span>Why Standard Package? ✨ Generate Value Pitch</span>
-            </button>
-            <div id="package-pitch" class="mb-6">
-                <!-- LLM generated text goes here -->
-            </div>
-            <!-- End Gemini Feature -->
-
-            <p class="text-gray-600 mb-4">
-                To Get Coupon Code, Select one of the Registration Packages Below:
-            </p>
-
-            <!-- Package Selection (Button to trigger Receipt Modal) -->
-            <button onclick="toggleReceiptModal(true)" class="w-full border-2 border-scale-green bg-scale-green/10 p-5 rounded-xl text-left hover:shadow-lg transition duration-300 mb-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-xl font-bold text-scale-green">Standard Package</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-3xl font-extrabold text-scale-green">₦12,000</p>
-                        <p class="text-sm text-gray-500 line-through">₦16,000</p>
-                    </div>
-                </div>
-                <p class="text-scale-green/80 text-sm mt-2">Click to proceed to payment and get your coupon code.</p>
-            </button>
-
-            <!-- Back Link/Support -->
-            <a href="https://wa.link/m2g76j" target="_blank" class="text-sm text-gray-500 hover:text-scale-blue font-medium underline">
-                Need more explanation? Contact Support.
-            </a>
-        </div>
-
-        <!-- ===== PAGE 5: LOGIN PAGE (Simplified) ===== -->
-        <div id="page-login" class="card hidden">
-            <h2 class="text-3xl font-extrabold text-scale-blue mb-6 text-center">Login to Account</h2>
-            <form>
-                <div class="space-y-4">
-                    <div class="input-group">
-                        <label for="loginEmail">Email Address</label>
-                        <input type="email" id="loginEmail" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
-                    </div>
-                    <div class="input-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-scale-blue text-white py-3 mt-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-150">Login</button>
-            </form>
-            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
-                <button onclick="showPage('page-signup')" class="text-sm text-gray-500 hover:text-scale-blue">Create Account</button>
-                <button onclick="showPage('page-forgot-password')" class="text-sm text-gray-500 hover:text-scale-blue">Forgot Password?</button>
-            </div>
-        </div>
-
-        <!-- ===== PAGE 5/Alternate: FORGOT PASSWORD PAGE (Simplified) ===== -->
-        <div id="page-forgot-password" class="card hidden">
-            <h2 class="text-3xl font-extrabold text-scale-blue mb-6 text-center">Forgot Password</h2>
-            <p class="text-gray-600 mb-6 text-center">Enter your email address to receive a password reset link.</p>
-            <form>
-                <div class="input-group">
-                    <label for="resetEmail">Email Address</label>
-                    <input type="email" id="resetEmail" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-scale-blue">
-                </div>
-                <button type="submit" class="w-full bg-scale-blue text-white py-3 mt-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-150">Reset Password</button>
-            </form>
-            <button onclick="showPage('page-login')" class="w-full text-center text-sm text-gray-500 hover:text-scale-blue mt-4">Back to Login</button>
-        </div>
-
-    </div>
-
-    <!-- ===== FULL-SCREEN PAYMENT GATEWAY/RECEIPT MODAL (Page 4 Logic) ===== -->
-    <div id="receipt-modal" class="receipt-modal hidden opacity-0 flex flex-col items-center justify-start p-6">
-        <div class="w-full max-w-lg mx-auto">
-            <div class="flex justify-center items-center py-4 mb-4 border-b border-gray-200">
-                <h2 class="text-2xl font-bold text-scale-blue">SCALEHEIGHT Payment Gateway</h2>
-            </div>
-
-            <!-- Warning/Note Section -->
-            <div class="p-4 mb-6 bg-red-100 border-l-4 border-scale-red rounded-lg shadow-md">
-                <p class="text-sm text-scale-red font-bold">
-                    <span class="inline-block px-1 bg-scale-red text-white rounded mr-1">NOTE:</span>
-                    DO NOT PAY WITH OPAY. IT IS NOT ACCEPTED ON SCALEHEIGHT, USE ANY OTHER BANK OR POS TO PAY.
-                </p>
-            </div>
-
-            <p class="text-sm text-gray-700 mb-4">
-                Please make your payment to the account below.
-            </p>
-            <p class="text-xs text-gray-500 mb-6">
-                After making payment, please contact support with your payment receipt.
-            </p>
-
-            <!-- Amount to Pay -->
-            <div class="text-center mb-6 py-4 border-b border-t border-gray-200">
-                <p class="text-gray-500 text-xs mb-1">Amount to Pay</p>
-                <div class="flex justify-center items-center space-x-2">
-                    <p class="text-4xl font-extrabold text-gray-900">₦12,000</p>
-                    <button onclick="copyToClipboard('12000')" class="text-sm text-scale-blue font-semibold flex items-center hover:text-blue-700 transition duration-150">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v10a2 2 0 002 2h2m0-10h8a2 2 0 012 2v2M8 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>
-                        Copy
-                    </button>
-                </div>
-            </div>
-
-            <!-- Account Details -->
-            <div class="space-y-4 mb-8">
-                <!-- Account Number -->
-                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <div class="flex flex-col">
-                        <span class="text-xs text-gray-500">Account Number</span>
-                        <span class="text-xl font-bold text-gray-900">9859505879</span>
-                    </div>
-                    <button onclick="copyToClipboard('9859505879')" class="text-scale-blue hover:text-blue-700 transition duration-150">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v10a2 2 0 002 2h2m0-10h8a2 2 0 012 2v2M8 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>
-                    </button>
-                </div>
-
-                <!-- Bank Name -->
-                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <div class="flex flex-col">
-                        <span class="text-xs text-gray-500">Bank Name</span>
-                        <span class="text-xl font-bold text-gray-900">Paystack Titan</span>
-                    </div>
-                    <button onclick="copyToClipboard('Paystack Titan')" class="text-scale-blue hover:text-blue-700 transition duration-150">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v10a2 2 0 002 2h2m0-10h8a2 2 0 012 2v2M8 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>
-                    </button>
-                </div>
-
-                <!-- Account Name -->
-                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <div class="flex flex-col">
-                        <span class="text-xs text-gray-500">Account Name</span>
-                        <span class="text-xl font-bold text-gray-900">Tirimisiyu Usman</span>
-                    </div>
-                    <button onclick="copyToClipboard('Tirimisiyu Usman')" class="text-scale-blue hover:text-blue-700 transition duration-150">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v10a2 2 0 002 2h2m0-10h8a2 2 0 012 2v2M8 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <button onclick="contactSupport()" class="w-full bg-scale-green text-white py-4 rounded-lg font-extrabold text-lg shadow-xl hover:bg-emerald-600 transition duration-150 mb-3">
-                I have made this transfer
-            </button>
-            <p class="text-center text-sm">
-                <a href="https://wa.link/m2g76j" target="_blank" class="font-bold underline text-scale-blue hover:text-blue-700">Need help? Contact Scale height Support</a>
-            </p>
-
-             <button onclick="toggleReceiptModal(false)" class="w-full text-center text-sm text-gray-500 hover:text-gray-900 mt-4 py-2 border-t border-gray-100">
-                Back to Registration
-            </button>
-        </div>
-    </div>
-
-
-    <!-- ===== JAVASCRIPT LOGIC (Must be at the end of body) ===== -->
-    <script type="module">
-        // ====================================================================
-        // CONSTANTS & STATE
-        // ====================================================================
-        const VALID_COUPON_CODE = "SCALE2025"; // Mock valid coupon code for validation
-        const DASHBOARD_URL = "https://sites.google.com/view/scaleheight/dashboard";
-
-        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
-        const API_KEY = ""; // Managed by canvas environment
-
-        // REAL APP SCRIPT ENDPOINT - UPDATED WITH USER'S LINK
-        const REAL_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3yT17vZIPKNyLFwXXmsMdR2uoJm0eJk4Pjwz2MO2qUE7obfwT6FYlQHUbwGB1ofKyA/exec';
-        
-        let MOCK_VERIFICATION_TOKEN = null; // Stored here temporarily for client-side validation
-        let MOCK_REGISTERED_EMAIL = null;
-        let IS_PROCESSING = false; // Prevent double clicks on signup
-
-        // ====================================================================
-        // GEMINI API INTEGRATION - COMMON FUNCTIONS
-        // ====================================================================
-
-        /**
-         * Generic function to call Gemini API with exponential backoff.
-         * @param {string} userQuery - The main query text.
-         * @param {string} systemPrompt - Instruction for the LLM's persona/role.
-         * @returns {Promise<string>} The generated text or a fallback message.
-         */
-        async function callGeminiApi(userQuery, systemPrompt) {
-            const maxRetries = 3;
-            let delay = 1000;
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            };
-            const apiUrl = `${API_URL}${API_KEY}`;
-
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        if (response.status === 429 && i < maxRetries - 1) {
-                            console.warn(`Rate limit hit. Retrying in ${delay / 1000}s...`);
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            delay *= 2; // Exponential backoff
-                            continue;
-                        } else {
-                            throw new Error(`API call failed with status: ${response.status}`);
-                        }
-                    }
-
-                    const result = await response.json();
-                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "Failed to generate response.";
-
-                } catch (error) {
-                    console.error("Gemini API Error:", error);
-                    break;
-                }
-            }
-            return "Unable to provide analysis at this time. Please try again later.";
-        }
-
-        // ====================================================================
-        // GEMINI FEATURE 1: PACKAGE PITCH GENERATOR
-        // ====================================================================
-        const packageSystemPrompt = `You are a highly persuasive, concise marketing copywriter for a growth platform called ScaleHeight. Your goal is to write a single, short, and highly motivating paragraph (max 3 sentences) that justifies the immediate purchase of the 'Standard Package' priced at ₦12,000 (discounted from ₦16,000). Focus on immediate value, return on investment (ROI), and the urgency of the discount. Do not use any markdown formatting (like bolding, lists, or headers).`;
-
-        /**
-         * Handler for the pitch generation button.
-         */
-        window.generateAndDisplayPitch = async () => {
-            const pitchContainer = document.getElementById('package-pitch');
-            const pitchButton = document.getElementById('generate-pitch-btn');
-
-            pitchContainer.innerHTML = '<span class="text-scale-blue">Generating personalized pitch...</span>';
-            pitchButton.disabled = true;
-            pitchButton.classList.add('opacity-50', 'cursor-not-allowed');
-
-            const userQuery = "Generate the compelling pitch for the ScaleHeight Standard Package (₦12,000, save ₦4,000).";
-            const pitch = await callGeminiApi(userQuery, packageSystemPrompt);
-
-            pitchContainer.innerHTML = `<p class="italic text-gray-700 mt-2 p-3 bg-blue-50 border border-scale-blue rounded-lg">${pitch}</p>`;
-
-            pitchButton.disabled = false;
-            pitchButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-
-        // ====================================================================
-        // GEMINI FEATURE 2: PASSWORD STRENGTH ANALYZER
-        // ====================================================================
-        const passwordSystemPrompt = `You are a security expert. Your task is to analyze a user's password and provide a concise, single-paragraph analysis. The analysis must contain three distinct parts: 1) A clear, short assessment (e.g., Weak, Moderate, Strong). 2) A brief reason why. 3) A specific, actionable tip for improvement. Present the information clearly without using markdown headings or lists.`;
-
-        /**
-         * Calls the Gemini API to analyze password strength.
-         */
-        window.generateAndDisplayPasswordStrength = async () => {
-            const password = document.getElementById('password').value;
-            const analysisContainer = document.getElementById('password-analysis');
-
-            if (password.length < 6) {
-                analysisContainer.innerHTML = '<p class="text-scale-red text-sm mt-1">Password must be at least 6 characters long to analyze.</p>';
-                return;
-            }
-
-            analysisContainer.innerHTML = '<p class="text-scale-blue text-sm mt-1">Analyzing password strength...</p>';
-
-            const userQuery = `Analyze the security strength of this password: ${password}`;
-            const analysisText = await callGeminiApi(userQuery, passwordSystemPrompt);
-
-            // Simple colored box based on keyword check
-            let bgColor = 'bg-red-100 border-scale-red';
-            let textColor = 'text-scale-red';
-
-            if (analysisText.toLowerCase().includes('strong')) {
-                bgColor = 'bg-green-100 border-scale-green';
-                textColor = 'text-scale-green';
-            } else if (analysisText.toLowerCase().includes('moderate')) {
-                bgColor = 'bg-yellow-100 border-yellow-600';
-                textColor = 'text-yellow-700';
-            }
-
-            analysisContainer.innerHTML = `<div class="p-3 ${bgColor} border rounded-lg"><p class="text-sm ${textColor}">${analysisText}</p></div>`;
-        }
-
-        // ====================================================================
-        // REAL APP SCRIPT INTERFACE
-        // ====================================================================
-
-        /**
-         * Sends user data to the REAL Google App Script endpoint for email verification.
-         */
-        async function sendVerificationEmailReal(data) {
-            if (IS_PROCESSING) return { success: false, message: "Registration already in progress." };
-
-            IS_PROCESSING = true;
-            
-            try {
-                const response = await fetch(REAL_APP_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors', 
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8', // Ensure correct content type
-                    },
-                    // App Script expects the data inside the 'contents' property of the POST body
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                
-                if (result.result === 'success') {
-                    // Store the email and the code returned from App Script (for local validation demo)
-                    MOCK_REGISTERED_EMAIL = data.email;
-                    MOCK_VERIFICATION_TOKEN = result.verificationCode; 
                     
-                    return { success: true, message: "Verification email sent successfully." };
-                } else {
-                    return { success: false, message: result.message || "Server error: Could not send email." };
-                }
+                    <button type="button" class="btn btn-primary" onclick="showCouponView()">Continue</button>
+                </form>
 
-            } catch (error) {
-                console.error("Fetch failed (Check your App Script deployment and permissions):", error);
-                return { success: false, message: "Network error. Check console and App Script status." };
-            } finally {
-                IS_PROCESSING = false;
-            }
-        }
+                <div class="link-text">
+                    <a href="#" onclick="showMessage('Login functionality would direct to a separate Login Page/View.', true)">Login button</a>
+                </div>
+                <div class="link-text">
+                    <a href="#" onclick="showMessage('Forgot Password functionality would direct to a separate Forgot Password Page/View.', true)">Forgot Password button</a>
+                </div>
+            </div>
+        </div>
 
+        <!-- View 2: Coupon and Package Selection -->
+        <div id="view-coupon-package" class="hidden">
+            <div class="header">WELCOME TO SCALE HEIGHT</div>
+            <div class="view-content">
+                <p style="text-align: center; font-size: 1.1rem; font-weight: 500; margin-bottom: 25px;">You need a coupon code to register on Scaleheight.</p>
 
-        // ====================================================================
-        // VERIFICATION CODE VALIDATION
-        // ====================================================================
-        /**
-         * Validates the 6-digit code entered by the user against the mock token.
-         */
-        window.validateVerificationCode = () => {
-            const codeInput = document.getElementById('verificationCode');
-            const errorContainer = document.getElementById('verification-error');
-            errorContainer.classList.add('hidden');
-            errorContainer.textContent = '';
-            
-            const enteredCode = codeInput.value.trim();
+                <div class="form-group">
+                    <label for="couponCode">Enter Coupon Code</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="couponCode" placeholder="Enter Coupon Code" required>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #cc0000; margin-top: 5px; display: none;" id="coupon-error">Invalid or already used coupon code.</p>
+                </div>
+                
+                <h3 style="margin-top: 30px; text-align: center; color: #555;">Select one of the Registration Packages Below</h3>
 
-            if (enteredCode === MOCK_VERIFICATION_TOKEN && MOCK_VERIFICATION_TOKEN !== null) {
-                // Successful verification
-                console.log("Code successfully verified. Moving to coupon page.");
-                showPage('page-coupon-entry');
-                // Clear state after successful verification
-                MOCK_VERIFICATION_TOKEN = null;
-                MOCK_REGISTERED_EMAIL = null;
-            } else {
-                // Failed verification
-                errorContainer.textContent = 'Invalid or expired verification code. Please check your email and try re-registering.';
-                errorContainer.classList.remove('hidden');
-            }
-        }
+                <!-- Standard Package Card -->
+                <div class="package-card" onclick="showPaymentModal()">
+                    <h3>Standard Package</h3>
+                    <span class="price">₦12,000</span>
+                    <span class="strikethrough-price">₦16,000</span>
+                </div>
 
-
-        // ====================================================================
-        // COUPON VALIDATION AND REDIRECT FUNCTION
-        // ====================================================================
-        /**
-         * Validates the entered coupon code and redirects to the dashboard on success.
-         */
-        window.validateCouponAndRedirect = () => {
-            const couponInput = document.getElementById('couponCode');
-            const couponError = document.getElementById('coupon-error');
-            const enteredCode = couponInput.value.trim().toUpperCase();
-
-            couponError.classList.add('hidden'); // Reset error message
-
-            if (enteredCode === VALID_COUPON_CODE) {
-                console.log("Coupon validated. Redirecting to dashboard...");
-                window.location.href = DASHBOARD_URL;
-            } else {
-                couponError.textContent = "Invalid coupon code. Please check and try again.";
-                couponError.classList.remove('hidden');
-                console.warn("Invalid coupon code entered:", enteredCode);
-            }
-        }
+                <div class="support-link-section">
+                    If You Need more Explanation on Scaleheight, or You have Any Issue with Making Payment, <a href="https://wa.link/m2g76j" target="_blank">Click here to Contact our Support Team.</a>
+                </div>
+                
+                <div class="page-navigation">
+                    <button type="button" class="btn btn-secondary" onclick="showCreateAccountView()">Previous</button>
+                    <button type="button" class="btn btn-primary" onclick="submitRegistration()">Submit</button>
+                </div>
+                
+                <div class="link-text">
+                    <a href="https://wa.link/m2g76j" target="_blank" class="btn-primary" style="background-color: #555; display: inline-block; width: auto; padding: 10px 20px; border-radius: 8px; font-weight: 600;">Contact support</a>
+                </div>
+            </div>
+        </div>
         
-        // ====================================================================
-        // APPLICATION LOGIC
-        // ====================================================================
-        const pages = ['page-signup', 'page-email-verification', 'page-coupon-entry', 'page-login', 'page-forgot-password'];
-        const receiptModal = document.getElementById('receipt-modal');
-        const signupForm = document.getElementById('signup-form');
-        const signupError = document.getElementById('signup-error');
-        const mockCodeInfo = document.getElementById('mock-code-info');
+        <!-- View 3: Login/Password/Coupon (Alternative Entry - Consolidated) -->
+        <!-- The user's request for this view is confusingly similar to Page 1/2. 
+             I'll integrate the "Get Coupon Code" button here linking to WhatsApp. -->
+        <div id="view-login-coupon" class="hidden">
+            <div class="header">Create An Account</div>
+            <div class="view-content">
+                <h2 style="text-align: center;">Enter Password / Enter Coupon Code</h2>
+                <h3 style="text-align: center; color: #1a73e8; margin-top: 30px;">To Get Coupon Code, Select one of the Registration Packages Below</h3>
+                
+                <!-- Package Section -->
+                <div class="package-card" onclick="showPaymentModal()">
+                    <h3>Standard Package</h3>
+                    <span class="price">₦12,000</span>
+                    <span class="strikethrough-price">₦16,000</span>
+                </div>
+                
+                <a href="https://wa.link/m2g76j" target="_blank" class="btn btn-secondary" style="margin-top: 20px;">Back (to WhatsApp)</a>
+            </div>
+        </div>
 
-
-        /**
-         * Simulates client-side routing to show one page and hide others.
-         * @param {string} pageId - The ID of the page to show.
-         */
-        window.showPage = (pageId) => {
-            pages.forEach(id => {
-                const page = document.getElementById(id);
-                if (page) {
-                    page.classList.add('hidden');
-                }
-            });
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.remove('hidden');
-            }
-            if (pageId === 'page-email-verification') {
-                 // Update the mock code display for the user
-                 if (MOCK_VERIFICATION_TOKEN) {
-                    mockCodeInfo.innerHTML = `<span class="text-scale-red font-extrabold">DEMO CODE: ${MOCK_VERIFICATION_TOKEN}</span> (Check your email for the real code!)`;
-                 }
-            } else {
-                 mockCodeInfo.textContent = '';
-            }
-        }
-
-        /**
-         * Toggles the visibility of a password field and its icon.
-         */
-        window.togglePassword = (inputId) => {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(`${inputId}-toggle-icon`);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.textContent = '🙈'; // Hide Icon
-            } else {
-                input.type = 'password';
-                icon.textContent = '👁️'; // Show Icon
-            }
-        }
-
-        /**
-         * Handles form submission for signup, triggering the real email verification service.
-         */
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                confirmPassword: document.getElementById('confirmPassword').value,
-            };
-
-            signupError.classList.add('hidden');
+    </div>
+    
+    <!-- Payment Receipt Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">SCALEHEIGHT Payment Gateway</div>
             
-            // Basic validation
-            if (data.password !== data.confirmPassword) {
-                signupError.textContent = "Passwords do not match.";
-                signupError.classList.remove('hidden');
-                return;
-            }
+            <div class="bank-transfer-info">
+                <p style="font-size: 0.75rem;">Pay with Bank Transfer</p>
+                <p>Please make plan payment to the account below.</p>
+            </div>
+            
+            <!-- Red Note -->
+            <div class="red-note">
+                Note: DO NOT PAY WITH OPAY. IT IS NOT ACCEPTED ON SCALEHEIGHT, USE ANY OTHER BANK OR POS TO PAY.
+            </div>
+            <p style="font-size: 0.6875rem; text-align: center; margin-top: 5px;">After making payment, please contact support with your payment receipt.</p>
+            
+            <!-- Amount -->
+            <div class="amount-section">
+                <div>Amount to Pay</div>
+                <div class="amount-display">
+                    <span class="amount-value">₦12,000</span>
+                    <button class="copy-btn" onclick="copyToClipboard('12000', this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Account Details -->
+            <div class="detail-row">
+                <span class="detail-label">Account Number (Bold)</span>
+                <span class="detail-value" id="account-number">9859505879</span>
+                <button class="copy-btn" onclick="copyToClipboard('9859505879', this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Bank Name</span>
+                <span class="detail-value" id="bank-name">Paystack titan</span>
+                <button class="copy-btn" onclick="copyToClipboard('Paystack titan', this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Account Name</span>
+                <span class="detail-value" id="account-name">Tirimisiyu usman</span>
+                <button class="copy-btn" onclick="copyToClipboard('Tirimisiyu usman', this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
 
-            // Disable button during processing
-            const submitButton = e.submitter;
-            submitButton.disabled = true;
-            submitButton.textContent = 'Sending Email...';
-            submitButton.classList.add('opacity-50');
-
-            try {
-                // Call the REAL App Script service
-                const result = await sendVerificationEmailReal(data);
-
-                if (result.success) {
-                    showPage('page-email-verification');
-                } else {
-                    signupError.textContent = result.message;
-                    signupError.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error("Signup failed:", error);
-                signupError.textContent = "An unexpected network error occurred. Please try again.";
-                signupError.classList.remove('hidden');
-            } finally {
-                // Re-enable button
-                submitButton.disabled = false;
-                submitButton.textContent = 'Continue';
-                submitButton.classList.remove('opacity-50');
-            }
-        });
-
-
-        /**
-         * Toggles the visibility of the full-screen receipt modal.
-         */
-        window.toggleReceiptModal = (show) => {
-            if (show) {
-                // Hide main app content and show modal
-                document.getElementById('app-container').classList.add('hidden');
-                receiptModal.classList.remove('hidden');
-                setTimeout(() => {
-                    receiptModal.classList.remove('opacity-0');
-                    receiptModal.classList.add('opacity-100');
-                }, 10);
-            } else {
-                 // Hide modal and show main app content (back to coupon page)
-                receiptModal.classList.add('opacity-0');
-                receiptModal.classList.remove('opacity-100');
-                setTimeout(() => {
-                    receiptModal.classList.add('hidden');
-                    document.getElementById('app-container').classList.remove('hidden');
-                    showPage('page-coupon-entry');
-                }, 300);
-            }
-        }
-
-        /**
-         * Copies text to the clipboard and provides simple feedback.
-         */
-        window.copyToClipboard = (text) => {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            // Simple visual feedback
-            const originalText = "Copy";
-            const button = event.currentTarget;
-            if (button.textContent.includes(originalText)) {
-                button.innerHTML = '<span class="text-scale-green font-semibold">Copied!</span>';
-                setTimeout(() => {
-                    button.innerHTML = `<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v10a2 2 0 002 2h2m0-10h8a2 2 0 012 2v2M8 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>Copy`;
-                }, 1500);
-            }
-        }
-
-        /**
-         * Redirects to the support WhatsApp link.
-         */
-        window.contactSupport = () => {
-             window.open('https://wa.link/m2g76j', '_blank');
-        }
-
-        // Initialize the first page view on load
-        window.onload = () => {
-            showPage('page-signup');
-        }
-
-    </script>
-</body>
-</html>
+            <button class="btn btn-primary" style="margin-top: 30px;" onclick="hidePaymentModal(); showMessage('Please make sure you complete your payment and enter the coupon code before submitting your registration.', true)">I have made this transfer</button>
+            
+            <a href="https://wa.link/m2g76j" target="_blank" class="btn btn-green-large">Contact Support</a>
+            
+            <div class="help-contact">
+                <a href="https://wa.link/m2g76j" target="_blank">Need help? Contact Scale height Support</a>
+            </div>
+        </div>
+    </div>
+    

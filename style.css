@@ -1,0 +1,387 @@
+<style>
+        /* General Reset and Base Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to the top for better embedded visibility */
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Container for embedding suitability */
+        .app-container {
+            width: 100%;
+            max-width: 420px; /* Suitable max width for mobile/embedded view */
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 10px;
+            min-height: 600px;
+        }
+
+        /* Header Styling */
+        .header {
+            background-color: #1a73e8;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* View Content Styling */
+        .view-content {
+            padding: 25px;
+        }
+
+        /* Form Group Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 1px #1a73e8;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #145cb3;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .link-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .link-text a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Page 2 - Package Selection */
+        .package-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .package-card:hover {
+            border-color: #1a73e8;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
+        }
+
+        .package-card h3 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            color: #1a73e8;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #008000;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .strikethrough-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 1.1rem;
+        }
+
+        .page-navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-navigation .btn {
+            width: 50%;
+            margin-top: 0;
+        }
+
+        .support-link-section {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+        }
+
+        /* Modal/Pop-up Styles (Receipt) */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+
+        .modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .bank-transfer-info {
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .bank-transfer-info p {
+            margin: 5px 0;
+        }
+
+        .red-note {
+            color: #cc0000;
+            font-weight: bold;
+            border: 1px solid #cc0000;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .amount-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .amount-section div {
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .amount-display {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .amount-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px dashed #eee;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #1a73e8;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: #e6f0ff;
+        }
+
+        .btn-green-large {
+            background-color: #008000;
+            color: #ffffff;
+            font-size: 1.1rem;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-green-large:hover {
+            background-color: #006400;
+        }
+
+        .help-contact {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .help-contact a {
+            color: #333;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* Utility for hiding/showing views */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Message Box Styling */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            text-align: center;
+            max-width: 300px;
+            width: 80%;
+            border-top: 4px solid #1a73e8;
+        }
+        
+        .message-box .message-text {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .message-box .message-btn {
+            background-color: #1a73e8;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* Loading Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1a73e8;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
